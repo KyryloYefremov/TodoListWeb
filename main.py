@@ -9,11 +9,6 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/today-tasks/")
-def get_today_tasks():
-    return render_template("today_tasks.html")
-
-
 @app.route("/future-tasks/")
 def get_future_tasks():
     return render_template("future_tasks.html")
