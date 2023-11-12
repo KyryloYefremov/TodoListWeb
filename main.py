@@ -2,6 +2,8 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 
+from forms import TaskForm
+
 app = Flask(__name__)
 db = SQLAlchemy()
 # Create database
@@ -87,6 +89,17 @@ def get_projects():
         tasks_by_projects.append(task_list)
 
     return render_template("projects.html", all_projects=projects, all_tasks=tasks_by_projects)
+
+
+@app.route("/edit-task/<int:task_id>", methods=["POST", "GET"])
+def edit_task(task_id):
+    task = db.get_or_404(Task, task_id)
+    return render_template("index.html")
+
+
+@app.route("/delete")
+def delete_task():
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
