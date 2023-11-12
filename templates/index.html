@@ -32,6 +32,37 @@
                     <div class="due-date"> {{ task.date }}</div>
                 </label>
             </div>
+
+            <div class="btn-group" role="group" aria-label="Button group">
+              <div>
+                <a
+                  href="{{ url_for('edit_task') }}"
+                  class="btn btn-secondary m-1"
+                  style="
+                    --bs-btn-padding-x: 0.2rem;
+                    --bs-btn-padding-y: 0.2rem;
+                    background-color: #557c55;
+                  "
+                >
+                  Change
+                </a>
+              </div>
+
+              <div>
+                <a
+                  href="{{ url_for('delete_task') }}"
+                  class="btn btn-secondary m-1"
+                  style="
+                    --bs-btn-padding-x: 0.2rem;
+                    --bs-btn-padding-y: 0.2rem;
+                    background-color: #fa7070;
+                  "
+                >
+                  Delete
+                </a>
+              </div>
+            </div>
+
           </li>
           {% endfor %}
 
