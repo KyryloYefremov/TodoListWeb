@@ -36,7 +36,7 @@
             <div class="btn-group" role="group" aria-label="Button group">
               <div>
                 <a
-                  href="{{ url_for('edit_task') }}"
+                  href="{{ url_for('edit_task', task_id=task.id) }}"
                   class="btn btn-secondary m-1"
                   style="
                     --bs-btn-padding-x: 0.2rem;
