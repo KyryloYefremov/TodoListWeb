@@ -1,13 +1,16 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from flask_bootstrap import Bootstrap5
 
 from forms import TaskForm
 
 app = Flask(__name__)
 db = SQLAlchemy()
+bootstrap = Bootstrap5(app)
 # Create database
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///task-manager.db"
+app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 # Initialise the app with the extension
 db.init_app(app)
 
@@ -94,7 +97,18 @@ def get_projects():
 @app.route("/edit-task/<int:task_id>", methods=["POST", "GET"])
 def edit_task(task_id):
     task = db.get_or_404(Task, task_id)
-    return render_template("index.html")
+    task_form = TaskForm(
+        name=task.name,
+        date=task.date,
+    )
+
+    if task_form.validate_on_submit():
+        task.name = task_form.name
+        task.date = task_form.date
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    return render_template("edit-task.html", form=task_form)
 
 
 @app.route("/delete")
