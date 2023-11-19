@@ -74,8 +74,10 @@ t3 = Task(
 
 @app.route("/")
 def home():
+    today = date.today().strftime("%d.%m.%Y")
     tasks = db.session.execute(db.select(Task)).scalars().all()
-    return render_template("index.html", all_tasks=tasks)
+    today_tasks = [task for task in tasks if task.date == today]
+    return render_template("index.html", all_tasks=today_tasks)
 
 
 @app.route("/future-tasks/")
@@ -85,6 +87,7 @@ def get_future_tasks():
 
 @app.route("/projects/")
 def get_projects():
+    # TODO: fix a problem with not showing all tasks in project section
     projects = db.session.execute(db.select(Project).order_by("id")).scalars().all()
     tasks_by_projects = []
 
@@ -94,6 +97,23 @@ def get_projects():
         tasks_by_projects.append(task_list)
 
     return render_template("projects.html", all_projects=projects, all_tasks=tasks_by_projects)
+
+
+@app.route("/add-task", methods=["POST", "GET"])
+def add_task():
+    add_task_form = TaskForm()
+    p_id = 3
+    if add_task_form.validate_on_submit():
+        new_task = Task(
+            name=add_task_form.name.data,
+            date=add_task_form.date.data.strftime("%d.%m.%Y"),
+            project=db.get_or_404(Project, p_id)
+        )
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    return render_template("add-task.html", form=add_task_form)
 
 
 @app.route("/edit-task/<int:task_id>", methods=["POST", "GET"])
