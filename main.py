@@ -107,18 +107,22 @@ def edit_task(task_id):
         date=task_date,
     )
 
-    # if task_form.validate_on_submit():
-    #     task.name = task_form.name
-    #     task.date = task_form.date
-    #     db.session.commit()
-    #     return redirect(url_for("home"))
+    if task_form.validate_on_submit():
+        date_obj = task_form.date.data
+        task.name = task_form.name.data
+        task.date = date_obj.strftime("%d.%m.%Y")
+        db.session.commit()
+        return redirect(url_for("home"))
 
     return render_template("edit-task.html", form=task_form)
 
 
-@app.route("/delete")
-def delete_task():
-    return render_template("index.html")
+@app.route("/delete/<int:task_id>")
+def delete_task(task_id):
+    task_to_delete = db.get_or_404(Task, task_id)
+    db.session.delete(task_to_delete)
+    db.session.commit()
+    return redirect(url_for("home"))
 
 
 if __name__ == '__main__':
