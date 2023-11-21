@@ -87,15 +87,17 @@ def get_future_tasks():
 
 @app.route("/projects/")
 def get_projects():
-    # TODO: fix a problem with not showing all tasks in project section
     projects = db.session.execute(db.select(Project).order_by("id")).scalars().all()
-    tasks_by_projects = []
+    tasks_by_projects = {}
 
     proj_ids = [proj.id for proj in projects]
     for proj_id in proj_ids:
         task_list = db.session.execute(db.select(Task).where(Task.project_id == proj_id)).scalars().all()
-        tasks_by_projects.append(task_list)
+        tasks_by_projects[proj_id] = task_list
 
+    # <tasks_by_projects> looks like
+    #    project_id (key): [<Task 1>, <Task 2>, ...] (value),
+    # where value is a list of tasks which belongs to current project
     return render_template("projects.html", all_projects=projects, all_tasks=tasks_by_projects)
 
 
