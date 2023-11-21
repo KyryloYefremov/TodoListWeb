@@ -104,12 +104,20 @@ def get_projects():
 @app.route("/add-task", methods=["POST", "GET"])
 def add_task():
     add_task_form = TaskForm()
-    p_id = 3
+    # Getting all project from db and send them to TaskForm into select field
+    all_projects_obj: list[Project] = db.session.execute(db.select(Project).order_by(Project.id)).scalars().all()
+    all_projects: list[str] = [proj.name for proj in all_projects_obj]
+    add_task_form.set_projects(existing_projects=all_projects)
+
     if add_task_form.validate_on_submit():
+        proj_name = add_task_form.project.data
+        # TODO: fix problem with executing a project from db via project.name
+        proj_id = db.session.execute(db.select(Project).where(Project.name == proj_name)).scalar()
+        print(f"Id:{proj_id} + {type(proj_id)}")
         new_task = Task(
             name=add_task_form.name.data,
             date=add_task_form.date.data.strftime("%d.%m.%Y"),
-            project=db.get_or_404(Project, p_id)
+            project=db.get_or_404(Project, proj_id)
         )
         db.session.add(new_task)
         db.session.commit()
