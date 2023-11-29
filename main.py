@@ -111,13 +111,12 @@ def add_task():
 
     if add_task_form.validate_on_submit():
         proj_name = add_task_form.project.data
-        # TODO: fix problem with executing a project from db via project.name
-        proj_id = db.session.execute(db.select(Project).where(Project.name == proj_name)).scalar()
-        print(f"Id:{proj_id} + {type(proj_id)}")
+        # Getting project obj from the database
+        proj = db.session.execute(db.select(Project).where(Project.name == proj_name)).scalar()
         new_task = Task(
             name=add_task_form.name.data,
             date=add_task_form.date.data.strftime("%d.%m.%Y"),
-            project=db.get_or_404(Project, proj_id)
+            project=proj
         )
         db.session.add(new_task)
         db.session.commit()
