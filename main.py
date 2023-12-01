@@ -5,7 +5,7 @@ from flask_bootstrap import Bootstrap5
 
 from datetime import date
 
-from forms import TaskForm
+from forms import TaskForm, ProjectForm
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -122,7 +122,7 @@ def add_task():
         db.session.commit()
         return redirect(url_for("home"))
 
-    return render_template("add-task.html", form=add_task_form)
+    return render_template("add.html", form=add_task_form, mode="task")
 
 
 @app.route("/edit-task/<int:task_id>", methods=["POST", "GET"])
@@ -161,6 +161,22 @@ def delete_task(task_id):
     db.session.delete(task_to_delete)
     db.session.commit()
     return redirect(url_for("home"))
+
+
+@app.route("/add-project", methods=["GET", "POST"])
+def add_project():
+    add_proj_form = ProjectForm()
+
+    if add_proj_form.validate_on_submit():
+        new_proj = Project(
+            name=add_proj_form.name.data,
+        )
+        db.session.add(new_proj)
+        db.session.commit()
+        return redirect(url_for("get_projects"))
+
+    return render_template("add.html", form=add_proj_form, mode="project")
+
 
 
 if __name__ == '__main__':

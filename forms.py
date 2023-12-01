@@ -12,3 +12,7 @@ class TaskForm(FlaskForm):
     def set_projects(self, existing_projects: list[str]):
         self.project.choices = existing_projects
 
+
+class ProjectForm(FlaskForm):
+    name = StringField("Project Name", validators=[DataRequired()])
+    submit = SubmitField("Submit Task")
