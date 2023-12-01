@@ -131,19 +131,28 @@ def edit_task(task_id):
     task_date = date(day=int(task.date.split(".")[0]),
                      month=int(task.date.split(".")[1]),
                      year=int(task.date.split(".")[2]))
-    task_form = TaskForm(
+    # Getting all project from db and send them to TaskForm into select field
+    all_projects_obj: list[Project] = db.session.execute(db.select(Project).order_by(Project.id)).scalars().all()
+    all_projects: list[str] = [proj.name for proj in all_projects_obj]
+
+    edit_task_form = TaskForm(
         name=task.name,
         date=task_date,
     )
+    edit_task_form.set_projects(existing_projects=all_projects)
 
-    if task_form.validate_on_submit():
-        date_obj = task_form.date.data
-        task.name = task_form.name.data
+    selected_project = Project.query.filter_by(id=task.project_id).first()
+    if selected_project:
+        edit_task_form.project.data = selected_project.name
+
+    if edit_task_form.validate_on_submit():
+        date_obj = edit_task_form.date.data
+        task.name = edit_task_form.name.data
         task.date = date_obj.strftime("%d.%m.%Y")
         db.session.commit()
         return redirect(url_for("home"))
 
-    return render_template("edit-task.html", form=task_form)
+    return render_template("edit-task.html", form=edit_task_form)
 
 
 @app.route("/delete/<int:task_id>")
