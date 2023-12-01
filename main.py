@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap5
 
-from datetime import date
+from datetime import date, datetime
 
 from forms import TaskForm, ProjectForm
 
@@ -77,12 +77,15 @@ def home():
     today = date.today().strftime("%d.%m.%Y")
     tasks = db.session.execute(db.select(Task)).scalars().all()
     today_tasks = [task for task in tasks if task.date == today]
-    return render_template("index.html", all_tasks=today_tasks)
+    return render_template("index.html", all_tasks=today_tasks, mode="Today")
 
 
 @app.route("/future-tasks/")
 def get_future_tasks():
-    return render_template("future_tasks.html")
+    today = datetime.today()
+    all_tasks = Task.query.all()
+    future_task = [task for task in all_tasks if datetime.strptime(task.date, "%d.%m.%Y") > today]
+    return render_template("index.html", all_tasks=future_task, mode="Future")
 
 
 @app.route("/projects/")
