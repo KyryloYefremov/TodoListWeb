@@ -14,13 +14,6 @@
     </div>
   </header>
 
-  <div class="text-center mb-3 p-2">
-      <a href="{{ url_for('add_project') }}"
-         class="btn btn-secondary">
-          Add Project
-      </a>
-  </div>
-
   {% for project in all_projects: %}
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -85,5 +78,16 @@
       </div>
     </div>
   {% endfor %}
+
+  <div class="text-center mb-3 p-2">
+      <a href="{{ url_for('add_project') }}"
+         class="btn btn-secondary">
+          Add Project
+      </a>
+      <a href="{{ url_for('add_task', from_page=request.endpoint) }}"
+         class="btn btn-secondary">
+          Add Task
+      </a>
+  </div>
 
 {% include "footer.html" %}

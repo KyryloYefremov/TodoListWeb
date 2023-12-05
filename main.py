@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, session, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap5
@@ -104,8 +104,11 @@ def get_projects():
     return render_template("projects.html", all_projects=projects, all_tasks=tasks_by_projects)
 
 
-@app.route("/add-task", methods=["POST", "GET"])
-def add_task():
+@app.route("/add-task/<from_page>", methods=["POST", "GET"])
+def add_task(from_page):
+
+    # from_page = session.get('from_page', '/')
+
     add_task_form = TaskForm()
     # Getting all project from db and send them to TaskForm into select field
     all_projects_obj: list[Project] = db.session.execute(db.select(Project).order_by(Project.id)).scalars().all()
@@ -123,7 +126,7 @@ def add_task():
         )
         db.session.add(new_task)
         db.session.commit()
-        return redirect(url_for("home"))
+        return redirect(url_for(from_page))
 
     return render_template("add.html", form=add_task_form, mode="task")
 
