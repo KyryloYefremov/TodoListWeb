@@ -19,9 +19,17 @@
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
           <div class="site-heading">
-            <h2 class="m-3">
-              {{ project.name }}
-            </h2>
+            <div class="editable" onclick="enableEdit('{{ project.id }}')">
+                <span id="projectName_{{ project.id }}">
+                    {{ project.name }}
+                </span>
+                <div class="edit-buttons" id="editButtons_{{ project.id }}">
+                    <input type="text" id="newProjectName_{{ project.id }}" value="{{ project.name }}">
+                    <button onclick="saveChanges('{{ project.id }}')">Save</button>
+                    <button onclick="cancelEdit('{{ project.id }}')">Cancel</button>
+                </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -36,7 +44,7 @@
               <div class="form-check">
                   <input class="form-check-input" type="checkbox"
                          id="todo{{ project.id|string }} {{ task.id|string }}" {% if task.is_done %}checked{% endif %} >
-                <label class="form-check-label" for="todo{{ project.id|string }} {{ task.id|string }}">
+                  <label class="form-check-label" for="todo{{ project.id|string }} {{ task.id|string }}">
                       <div>{{ task.name }}</div>
                       <div class="due-date"> {{ task.date }}</div>
                   </label>
@@ -89,5 +97,43 @@
           Add Task
       </a>
   </div>
+
+  <script>
+    function enableEdit(projectId) {
+        var projectNameSpan = document.getElementById('projectName_' + projectId);
+        var editButtonsDiv = document.getElementById('editButtons_' + projectId);
+
+        // Hide the span with the project name
+        projectNameSpan.style.display = 'none';
+
+        // Show the edit buttons
+        editButtonsDiv.style.display = 'block';
+    }
+
+    function saveChanges(projectId) {
+        var projectNameSpan = document.getElementById('projectName_' + projectId);
+        var editButtonsDiv = document.getElementById('editButtons_' + projectId);
+        var newProjectNameInput = document.getElementById('newProjectName_' + projectId);
+
+        // Update the project name in the HTML
+        projectNameSpan.innerText = newProjectNameInput.value;
+
+        editButtonsDiv.style.display = 'none';
+
+        // Show the span with the updated project name
+        projectNameSpan.style.display = 'inline-block';
+
+    }
+
+    function cancelEdit(projectId) {
+        var projectNameSpan = document.getElementById('projectName_' + projectId);
+        var editButtonsDiv = document.getElementById('editButtons_' + projectId);
+
+        editButtonsDiv.style.display = 'none';
+
+        // Show the span with the original project name
+        projectNameSpan.style.display = 'inline-block';
+    }
+  </script>
 
 {% include "footer.html" %}
