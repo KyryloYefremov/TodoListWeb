@@ -7,6 +7,13 @@ from datetime import date, datetime
 
 from forms import TaskForm, ProjectForm
 
+# Mode names
+TODAY_PAGE = "Today"
+FUTURE_TASK_MODE = "Future"
+PROJECTS_MODE = "Projects"
+TASK_MODE = "Task"
+
+
 app = Flask(__name__)
 db = SQLAlchemy()
 bootstrap = Bootstrap5(app)
@@ -77,7 +84,7 @@ def home():
     today = date.today().strftime("%d.%m.%Y")
     tasks = db.session.execute(db.select(Task)).scalars().all()
     today_tasks = [task for task in tasks if task.date == today]
-    return render_template("index.html", all_tasks=today_tasks, mode="Today")
+    return render_template("index.html", all_tasks=today_tasks, mode=TODAY_PAGE)
 
 
 @app.route("/future-tasks/")
@@ -85,7 +92,7 @@ def get_future_tasks():
     today = datetime.today()
     all_tasks = Task.query.all()
     future_task = [task for task in all_tasks if datetime.strptime(task.date, "%d.%m.%Y") > today]
-    return render_template("index.html", all_tasks=future_task, mode="Future")
+    return render_template("index.html", all_tasks=future_task, mode=FUTURE_TASK_MODE)
 
 
 @app.route("/projects/")
@@ -106,9 +113,6 @@ def get_projects():
 
 @app.route("/add-task/<from_page>", methods=["POST", "GET"])
 def add_task(from_page):
-
-    # from_page = session.get('from_page', '/')
-
     add_task_form = TaskForm()
     # Getting all project from db and send them to TaskForm into select field
     all_projects_obj: list[Project] = db.session.execute(db.select(Project).order_by(Project.id)).scalars().all()
@@ -128,11 +132,11 @@ def add_task(from_page):
         db.session.commit()
         return redirect(url_for(from_page))
 
-    return render_template("add.html", form=add_task_form, mode="task")
+    return render_template("add.html", form=add_task_form, mode=TASK_MODE)
 
 
-@app.route("/edit-task/<int:task_id>", methods=["POST", "GET"])
-def edit_task(task_id):
+@app.route("/edit-task/<int:task_id>/<from_page>", methods=["POST", "GET"])
+def edit_task(task_id, from_page):
     task = db.get_or_404(Task, task_id)
     task_date = date(day=int(task.date.split(".")[0]),
                      month=int(task.date.split(".")[1]),
@@ -156,17 +160,17 @@ def edit_task(task_id):
         task.name = edit_task_form.name.data
         task.date = date_obj.strftime("%d.%m.%Y")
         db.session.commit()
-        return redirect(url_for("home"))
+        return redirect(url_for(from_page))
 
     return render_template("edit-task.html", form=edit_task_form)
 
 
-@app.route("/delete/<int:task_id>")
-def delete_task(task_id):
+@app.route("/delete/<int:task_id>/<from_page>")
+def delete_task(task_id, from_page):
     task_to_delete = db.get_or_404(Task, task_id)
     db.session.delete(task_to_delete)
     db.session.commit()
-    return redirect(url_for("home"))
+    return redirect(url_for(from_page))
 
 
 @app.route("/add-project", methods=["GET", "POST"])
@@ -181,7 +185,7 @@ def add_project():
         db.session.commit()
         return redirect(url_for("get_projects"))
 
-    return render_template("add.html", form=add_proj_form, mode="project")
+    return render_template("add.html", form=add_proj_form, mode=PROJECTS_MODE[:-1])
 
 
 @app.route('/update_project', methods=['POST'])
