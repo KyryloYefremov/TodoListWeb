@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, redirect, url_for, request
+from flask import Flask, session, render_template, redirect, url_for, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap5
@@ -183,6 +183,18 @@ def add_project():
 
     return render_template("add.html", form=add_proj_form, mode="project")
 
+
+@app.route('/update_project', methods=['POST'])
+def update_project():
+    data = request.get_json()
+    project_id = int(data.get('projectId'))
+    new_name = data.get('newName')
+
+    proj = db.get_or_404(Project, project_id)
+    proj.name = new_name
+    db.session.commit()
+
+    return jsonify({'newName': new_name})
 
 
 if __name__ == '__main__':

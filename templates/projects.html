@@ -115,14 +115,27 @@
         var editButtonsDiv = document.getElementById('editButtons_' + projectId);
         var newProjectNameInput = document.getElementById('newProjectName_' + projectId);
 
-        // Update the project name in the HTML
-        projectNameSpan.innerText = newProjectNameInput.value;
-
-        editButtonsDiv.style.display = 'none';
-
-        // Show the span with the updated project name
-        projectNameSpan.style.display = 'inline-block';
-
+        // Отправка нового имени проекта на сервер
+        fetch('/update_project', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                projectId: projectId,
+                newName: newProjectNameInput.value,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Обновление проекта на странице
+            projectNameSpan.innerText = data.newName;
+            editButtonsDiv.style.display = 'none';
+            projectNameSpan.style.display = 'inline-block';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 
     function cancelEdit(projectId) {
