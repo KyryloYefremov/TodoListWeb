@@ -201,6 +201,23 @@ def update_project():
     return jsonify({'newName': new_name})
 
 
+@app.route('/toggle_task', methods=['POST'])
+def toggle_task():
+    print("IN")
+    data = request.get_json()
+    task_id = int(data.get('taskId'))
+    is_checked: bool = data.get('isChecked')
+    print(task_id)
+    print(is_checked)
+
+    # Обновление состояния чекбокса в базе данных (вместо этого используйте ваш механизм базы данных)
+    task_obj = db.get_or_404(Task, task_id)
+    task_obj.is_done = int(is_checked)
+    db.session.commit()
+
+    return jsonify({'success': True})
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
