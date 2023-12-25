@@ -42,11 +42,12 @@
             {% for task in all_tasks.get(project.id): %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div class="form-check">
-                  <!-- TODO: Fix catching changes from checkbox (check catching checkbox id)                -->
+                <!-- set a variable that will represent a checkbox                 -->
+                {% set checkbox_id = project.id|string + task.id|string %}
                   <input class="form-check-input" type="checkbox"
-                         onchange="toggleCheckbox('{{ project.id|string + task.id|string }}', {{ task.id }})"
-                         id="todo{{ project.id|string }} {{ task.id|string }}" {% if task.is_done %}checked{% endif %} >
-                  <label class="form-check-label" for="todo{{ project.id|string }} {{ task.id|string }}">
+                         onchange="toggleCheckbox({{ checkbox_id }}, {{ task.id }})"
+                         id="todo{{ checkbox_id }}" {% if task.is_done %}checked{% endif %} >
+                  <label class="form-check-label" for="todo{{ checkbox_id }}">
                       <div>{{ task.name }}</div>
                       <div class="due-date"> {{ task.date }}</div>
                   </label>
@@ -128,6 +129,7 @@
   </script>
 
 <!--Script for responding to clicking on project labels and activate changing mode-->
+<!--TODO: Implement btn "Cancel"-->
   <script>
     function enableEdit(projectId) {
         var projectNameSpan = document.getElementById('projectName_' + projectId);
