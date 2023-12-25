@@ -77,6 +77,7 @@
     --bs-btn-padding-x: 0.2rem;
     --bs-btn-padding-y: 0.2rem;
     background-color: #557c55;
+    border-color: #405b3e;
 }
 
 .change-btn.btn.btn-secondary:hover {
@@ -87,8 +88,18 @@
     --bs-btn-padding-x: 0.2rem;
     --bs-btn-padding-y: 0.2rem;
     background-color: #fa7070;
+    border-color: #e66262;
 }
 
 .delete-btn.btn.btn-secondary:hover {
     background-color: #e66262;
+}
+
+#submit {
+    background-color: #557c55;
+    border-color: #405b3e;
+}
+
+#submit:hover {
+    background-color: #405b3e;
 }

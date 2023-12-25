@@ -29,8 +29,7 @@
                        id="todo{{ all_tasks.index(task)+1 }}" {% if task.is_done %}checked{% endif %} >
                 <label class="form-check-label" for="todo{{ all_tasks.index(task)+1 }}">
                     <div>{{ task.name }}</div>
-                    <div>{{ task.project.name }}</div>
-                    <div class="due-date"> {{ task.date }}</div>
+                    <div class="due-date"> {{ task.date }} - {{ task.project.name }}</div>
                 </label>
             </div>
 

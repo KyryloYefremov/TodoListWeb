@@ -7,7 +7,7 @@ class TaskForm(FlaskForm):
     name = StringField("Task Name", validators=[DataRequired()])
     date = DateField("Date", validators=[DataRequired()])
     project = SelectField("Project",  validators=[DataRequired()])
-    submit = SubmitField("Submit Task")
+    submit = SubmitField("Submit")
 
     def set_projects(self, existing_projects: list[str]):
         self.project.choices = existing_projects
@@ -15,4 +15,4 @@ class TaskForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     name = StringField("Project Name", validators=[DataRequired()])
-    submit = SubmitField("Submit Project")
+    submit = SubmitField("Submit")
