@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, redirect, url_for, request, jsonify
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap5
@@ -82,7 +82,7 @@ t3 = Task(
 @app.route("/")
 def home():
     today = date.today().strftime("%d.%m.%Y")
-    tasks = db.session.execute(db.select(Task)).scalars().all()
+    tasks = db.session.execute(db.select(Task).order_by(Task.is_done)).scalars().all()
     today_tasks = [task for task in tasks if task.date == today]
     return render_template("index.html", all_tasks=today_tasks, mode=TODAY_PAGE)
 
@@ -90,7 +90,7 @@ def home():
 @app.route("/future-tasks/")
 def get_future_tasks():
     today = datetime.today()
-    all_tasks = Task.query.all()
+    all_tasks = Task.query.order_by(Task.is_done, Task.date).all()
     future_task = [task for task in all_tasks if datetime.strptime(task.date, "%d.%m.%Y") > today]
     return render_template("index.html", all_tasks=future_task, mode=FUTURE_TASK_MODE)
 
@@ -102,7 +102,8 @@ def get_projects():
 
     proj_ids = [proj.id for proj in projects]
     for proj_id in proj_ids:
-        task_list = db.session.execute(db.select(Task).where(Task.project_id == proj_id)).scalars().all()
+        task_list = db.session.execute(db.select(Task).where(Task.project_id == proj_id)
+                                       .order_by(Task.is_done, Task.date)).scalars().all()
         tasks_by_projects[proj_id] = task_list
 
     # <tasks_by_projects> looks like
