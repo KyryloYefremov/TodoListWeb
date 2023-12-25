@@ -15,4 +15,4 @@ class TaskForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     name = StringField("Project Name", validators=[DataRequired()])
-    submit = SubmitField("Submit Task")
+    submit = SubmitField("Submit Project")
