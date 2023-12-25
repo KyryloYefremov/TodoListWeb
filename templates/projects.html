@@ -24,9 +24,9 @@
                     {{ project.name }}
                 </span>
                 <div class="edit-buttons" id="editButtons_{{ project.id }}">
-                    <input type="text" id="newProjectName_{{ project.id }}" value="{{ project.name }}">
-                    <button onclick="saveChanges('{{ project.id }}')">Save</button>
-                    <button onclick="cancelEdit('{{ project.id }}')">Cancel</button>
+                    <input class="project-name-input" type="text" id="newProjectName_{{ project.id }}" value="{{ project.name }}">
+                    <button class="save-project-btn" onclick="saveChanges('{{ project.id }}')">Save</button>
+                    <button class="cancel-project-btn" onclick="cancelEdit('{{ project.id }}')">Cancel</button>
                 </div>
             </div>
 
