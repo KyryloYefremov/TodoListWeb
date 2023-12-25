@@ -1,0 +1,94 @@
+.main-body {
+    background-color: #f2ffe9;
+}
+
+.navbar {
+     background-color: #557C55;
+}
+
+.task-name {
+    flex-grow: 1;
+}
+
+.due-date {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.site-heading {
+    margin-top: 20px;
+}
+
+.editable {
+        cursor: pointer;
+        border-bottom: 1px dashed #000;
+        display: inline-block;
+        font-size: 1.5em;
+    }
+
+.edit-buttons {
+    display: none;
+}
+
+.save-project-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-project-btn:hover {
+    background-color: #45a049;
+}
+
+.cancel-project-btn {
+    background-color: #fa7070;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancel-project-btn:hover {
+    background-color: #e66262;
+}
+
+.project-name-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.project-name-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.change-btn.btn.btn-secondary {
+    --bs-btn-padding-x: 0.2rem;
+    --bs-btn-padding-y: 0.2rem;
+    background-color: #557c55;
+}
+
+.change-btn.btn.btn-secondary:hover {
+    background-color: #405b3e;
+}
+
+.delete-btn.btn.btn-secondary {
+    --bs-btn-padding-x: 0.2rem;
+    --bs-btn-padding-y: 0.2rem;
+    background-color: #fa7070;
+}
+
+.delete-btn.btn.btn-secondary:hover {
+    background-color: #e66262;
+}
