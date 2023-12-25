@@ -128,8 +128,7 @@
     }
   </script>
 
-<!--Script for responding to clicking on project labels and activate changing mode-->
-<!--TODO: Implement btn "Cancel"-->
+<!--Scripts for responding to clicking on project labels and activate changing mode-->
   <script>
     function enableEdit(projectId) {
         var projectNameSpan = document.getElementById('projectName_' + projectId);
@@ -147,7 +146,7 @@
         var editButtonsDiv = document.getElementById('editButtons_' + projectId);
         var newProjectNameInput = document.getElementById('newProjectName_' + projectId);
 
-        // Отправка нового имени проекта на сервер
+        // Sending new name to the server
         fetch('/update_project', {
             method: 'POST',
             headers: {
@@ -160,7 +159,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            // Обновление проекта на странице
+            // Updating the project on the page
             projectNameSpan.innerText = data.newName;
             editButtonsDiv.style.display = 'none';
             projectNameSpan.style.display = 'inline-block';
@@ -171,13 +170,20 @@
     }
 
     function cancelEdit(projectId) {
+        console.log('Cancel button clicked for project ID:', projectId);
+
         var projectNameSpan = document.getElementById('projectName_' + projectId);
         var editButtonsDiv = document.getElementById('editButtons_' + projectId);
 
-        editButtonsDiv.style.display = 'none';
-
-        // Show the span with the original project name
-        projectNameSpan.style.display = 'inline-block';
+        if (projectNameSpan && editButtonsDiv) {
+            // Wait for a small period of time and then hide edit btns and show project name
+            setTimeout(function () {
+                editButtonsDiv.style.display = 'none';
+                projectNameSpan.style.display = 'inline-block';
+            }, 1);
+        } else {
+            console.error('Elements not found for project ID:', projectId);
+        }
     }
   </script>
 
