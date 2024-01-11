@@ -1,10 +1,12 @@
 from flask import render_template, redirect, url_for, request, jsonify
 
+from os import path
 from datetime import date, datetime
 
-from init_program import app, db
+from init_program import app, db, db_file_name
 from db_tables import Task, Project
 from forms import TaskForm, ProjectForm
+from insert_test_data import create_tables, insert_data
 
 # Mode names
 TODAY_PAGE = "Today"
@@ -12,9 +14,12 @@ FUTURE_TASK_MODE = "Future"
 PROJECTS_MODE = "Projects"
 TASK_MODE = "Task"
 
-# from insert_test_data import create_tables, insert_data
-# create_tables()
-# insert_data()
+
+# Creating tables with test data if db doesn't exist
+if not path.exists(f"instance/{db_file_name}"):
+    create_tables()
+    insert_data()
+
 
 @app.route("/")
 def home():
